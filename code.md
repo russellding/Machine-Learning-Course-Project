@@ -81,12 +81,51 @@ news(Version == "1.0.1", package = "ggplot2")
 > set.seed(12345)
 > inTrain<-createDataPartition(y=trainRawData$classe, p=0.7, list=FALSE)
 > training<-trainRawData[inTrain,]
-> View(training)
 > testing<-trainRawData[-inTrain,]
-> modFit<-train(classe~., data=training, method="rf", prox=TRUE)
-Loading required package: randomForest
-randomForest 4.6-10
-Type rfNews() to see new features/changes/bug fixes.
-modFit
 
+Cross validation is necessary to imporve the accuracy of the model. However, it may also lead to overfitting of the model. I try to use 5-fold cross validation here.
+> controlRf <- trainControl(method="cv", 5)
+> modRF<-train(classe~., data=training, method="rf",ntree=250,trControl=controlRf)
+> modRF
+
+The result is below:
+
+Random Forest 
+
+13737 samples
+   53 predictor
+    5 classes: 'A', 'B', 'C', 'D', 'E' 
+
+No pre-processing
+Resampling: Cross-Validated (5 fold) 
+Summary of sample sizes: 10989, 10990, 10988, 10990, 10991 
+Resampling results across tuning parameters:
+
+  mtry  Accuracy   Kappa      Accuracy SD  Kappa SD   
+   2    0.9906828  0.9882130  0.002335447  0.002955031
+  29    0.9903185  0.9877537  0.001466699  0.001856144
+  57    0.9856586  0.9818574  0.002089468  0.002645576
+
+Accuracy was used to select the optimal model using  the largest value.
+The final value used for the model was mtry = 2. 
+
+Using the testing sample to check the quality of this model, I obtained:
+
+> pred<-predict(modRF,testing)
+> table(pred,testing$classe)
+    
+pred    A    B    C    D    E
+   A 1673   15    0    0    0
+   B    1 1118   14    0    0
+   C    0    6 1008   25    0
+   D    0    0    4  939    4
+   E    0    0    0    0 1078
+
+It seems quite precise!(At least better then I expected)
+
+I further worked on the testing data to get the prediction:
+
+> print(predict(modRF, newdata=testRawData))
+ [1] B A B A A E D B A A B C B A E E A B B B
+Levels: A B C D E
 
