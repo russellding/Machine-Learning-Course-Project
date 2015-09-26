@@ -69,7 +69,7 @@ Do the same on training data:
 > new<-new[,-2]
 > trainRawData<-new
 
-#Step 2:Model Construction and Prediction
+#Step 2:Model Construction
 
 I first choose Random Forests Algothrim since this algorithm can help to pick the best factors.
 
@@ -122,7 +122,7 @@ pred    A    B    C    D    E
    E    0    0    0    0 1078
 
 It seems quite precise!(At least better then I expected)
-
+#Step 3: Prediction on Testing Sample
 I further worked on the testing data to get the prediction:
 
 > print(predict(modRF, newdata=testRawData))
