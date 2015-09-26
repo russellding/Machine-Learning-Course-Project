@@ -129,3 +129,4 @@ I further worked on the testing data to get the prediction:
  [1] B A B A A E D B A A B C B A E E A B B B
 Levels: A B C D E
 
+I used above result for submission. It seems that the results are all correct! (I am literally crying at this moment on 2 am...)
